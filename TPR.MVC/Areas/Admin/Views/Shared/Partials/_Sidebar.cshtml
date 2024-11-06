@@ -1,0 +1,140 @@
+﻿@{
+    string GetActive(string page)
+    {
+        return ViewContext.RouteData.Values["Controller"].ToString().Equals(page)
+        ? "active" : null;
+    }
+}
+
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+        <h3 class="card-title"><span class="text-warning">The</span> Press Room</h3>
+    </div>
+    <ul class="nav">
+        <li class="nav-item profile">
+            <div class="profile-desc">
+                <div class="profile-pic">
+                    <div class="count-indicator">
+                        <img class="img-xs rounded-circle " src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" alt="">
+                        <span class="count bg-success"></span>
+                    </div>
+                    <div class="profile-name">
+                        <h5 class="mb-0 font-weight-normal">@User.Identity.Name</h5>
+                        <span>Admin</span>
+                    </div>
+                </div>
+                <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
+                <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
+                    <a href="#" class="dropdown-item preview-item">
+                        <div class="preview-thumbnail">
+                            <div class="preview-icon bg-dark rounded-circle">
+                                <i class="mdi mdi-settings text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="preview-item-content">
+                            <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item preview-item">
+                        <div class="preview-thumbnail">
+                            <div class="preview-icon bg-dark rounded-circle">
+                                <i class="mdi mdi-onepassword  text-info"></i>
+                            </div>
+                        </div>
+                        <div class="preview-item-content">
+                            <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item preview-item">
+                        <div class="preview-thumbnail">
+                            <div class="preview-icon bg-dark rounded-circle">
+                                <i class="mdi mdi-calendar-today text-success"></i>
+                            </div>
+                        </div>
+                        <div class="preview-item-content">
+                            <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item nav-category">
+            <span class="nav-link">Navigation</span>
+        </li>
+        <li class='nav-item menu-items @GetActive("Dashboard")'>
+            <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                <span class="menu-icon">
+                    <i class="mdi mdi-speedometer"></i>
+                </span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <span class="menu-icon">
+                    <i class="mdi mdi-laptop"></i>
+                </span>
+                <span class="menu-title">News</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a asp-area="Admin" asp-controller="News" asp-action="Index" class="nav-link">All News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="Admin" asp-controller="News" asp-action="PendingNews" class="nav-link">Pending News</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+                <span class="menu-icon">
+                    <i class="mdi mdi-security"></i>
+                </span>
+                <span class="menu-title">Accounts</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Accounts" asp-action="AllUsers"> All Users </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Accounts" asp-action="Admins"> Admins </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Accounts" asp-action="Writers"> Writers </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="#">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-document-box"></i>
+                </span>
+                <span class="menu-title">Documentation</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="menu-icon">
+                    <i class="mdi mdi-home"></i>
+                </span>
+                <span class="menu-title">Go Website</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" asp-area="" asp-controller="Auth" asp-action="Logout">
+                <span class="menu-icon">
+                    <i class="mdi mdi-logout"></i>
+                </span>
+                <span class="menu-title">Logout</span>
+            </a>
+        </li>
+    </ul>
+</nav>

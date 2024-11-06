@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] | The Press Room</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="~/writer-theme/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/writer-theme/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    @await RenderSectionAsync("Styles", false)
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="~/writer-theme/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="~/writer-theme/assets/images/favicon.ico" />
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- partial:_Navbar -->
+        <partial name="~/Areas/Author/Views/Shared/Partials/_Navbar.cshtml" />
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:_Sidebar -->
+            <partial name="~/Areas/Author/Views/Shared/Partials/_Sidebar.cshtml" />
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    @RenderBody()
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:_Footer -->
+                <partial name="~/Areas/Author/Views/Shared/Partials/_Footer.cshtml" />
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="~/writer-theme/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="~/writer-theme/assets/js/off-canvas.js"></script>
+    <script src="~/writer-theme/assets/js/hoverable-collapse.js"></script>
+    <script src="~/writer-theme/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <link href="~/css/toastr.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(function () {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", false)
+    <!-- End custom js for this page -->
+</body>
+</html>

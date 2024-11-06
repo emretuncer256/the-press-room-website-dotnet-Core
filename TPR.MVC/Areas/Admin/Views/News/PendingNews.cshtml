@@ -1,0 +1,83 @@
+﻿@using System.Security.Claims;
+@using TPR.Business.Abstract
+@using TPR.MVC.Helpers
+
+@model List<Article>
+
+@inject IUserService US
+@inject ICategoryService CS
+@inject IArticleService AS
+@{
+    ViewData["Title"] = "Pending News";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Pending News</h1>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div id="news-col-@item.Id" class="col-sm-6 col-md-4 col-lg-4 d-flex align-items-stretch mb-2">
+            <div class="card">
+                <div class="card-header">
+                    <button onclick='approveNews(@item.Id,  "@item.Title");' class="btn btn-success float-right">Approve</button>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">@item.Title</h4>
+                    <div class="text-center">
+                        <img style="width:100%;height:100%;border-radius: 5%;" src="~/uploads/Authors/Thumbnails/@item.Thumbnail" alt="" />
+                    </div>
+                    <div class="d-flex py-4">
+                        <div class="preview-list w-100">
+                            <div class="preview-item p-0">
+                                <div class="preview-thumbnail">
+                                    <img src="~/admin-theme/assets/images/faces-clipart/pic-1.png" class="rounded-circle" alt="">
+                                </div>
+                                <div class="preview-item-content d-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <div class="d-flex d-md-block d-xl-flex justify-content-between">
+                                            <h6 class="preview-subject">@US.GetById(item.UserId).Name @(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == item.UserId ? " (You)" : "")</h6>
+                                            <p class="text-muted text-small">@TimeAgoHelper.TimeAgo(item.CreatedAt)</p>
+                                        </div>
+                                        <p class="text-muted">Author @(User.IsInRole("Admin") ? " | Admin" : "")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border-radius: 5%;" class="card text-small shadow-lg p-3">
+                        @Html.Raw(item.Content.Substring(0, item.Content.Substring(0, 200).LastIndexOf(" ")))...
+                        <a asp-area="Admin" asp-controller="News" asp-action="Details" asp-route-id="@item.Id" class="btn btn-link float-right">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.Count <= 0)
+    {
+        <div class="alert alert-warning alert-dismissible fade show w-auto" role="alert">
+            There is no pending news.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function approveNews(id, title) {
+            $.ajax({
+                type: 'post',
+                url: '/Admin/News/ApproveNews',
+                data: { id: id },
+                success: (response) => {
+                    if (response.success) {
+                        $("#news-col-" + id).remove()
+                        toastr.success(response.message, title + " Approved Successfully");
+                    }
+                }
+            });
+        }
+    </script>
+}

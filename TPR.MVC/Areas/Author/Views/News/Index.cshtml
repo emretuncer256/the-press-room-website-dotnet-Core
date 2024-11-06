@@ -1,0 +1,175 @@
+﻿@using TPR.Business.Abstract
+@using TPR.MVC.Helpers
+
+@model List<Article>
+@inject ICategoryService CS
+@inject IArticleService AS
+@{
+    ViewData["Title"] = "All News";
+    Layout = "~/Areas/Author/Views/Shared/_Layout.cshtml";
+}
+
+<h1>All News</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">All My News</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Thumbnail</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Tags</th>
+                    <th>Created Date</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="news-row-@item.Id">
+                        <td><img style="width:100%;height:100%;border-radius: 5%;" src="~/uploads/Authors/Thumbnails/@item.Thumbnail" alt="" /></td>
+                        <td>
+                            <a data-toggle="tooltip" data-placement="bottom" title="@item.Title" asp-area="Author" asp-controller="News" asp-action="ViewNews" asp-route-id="@item.Id" class="btn btn-link">@(item.Title.Length > 25 ? item.Title.Substring(0, 25) + "..." : item.Title)</a>
+                        </td>
+                        <td><span class="badge badge-gradient-primary">@CS.GetById(item.CategoryId).Data.Name</span></td>
+                        <td class="d-flex flex-column justify-content-center">
+                            @foreach (var tag in AS.GetTags(item).Data)
+                            {
+                                <span class="badge badge-pill badge-gradient-dark my-1">#@tag.Name</span>
+                            }
+                        </td>
+                        <td>@item.CreatedAt.ToString("d MMM yyyy") <span class="badge badge-pill badge-gradient-success"> @item.CreatedAt.ToString("H:mm")</span></td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-wrench btn-icon-prepend"></i> Tools</button>
+                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 43px, 0px);">
+                                    <button id="unpublish-btn-@item.Id" onclick="unpublishNews(@item.Id, '@item.Title');" class="dropdown-item @(!item.IsPublished?"d-none":"")">Unpublish</button>
+                                    <button id="publish-btn-@item.Id" onclick="publishNews(@item.Id, '@item.Title');" class="dropdown-item @(item.IsPublished?"d-none":"")">Publish</button>
+                                    <a asp-area="Author" asp-controller="News" asp-action="EditNews" asp-route-id="@item.Id" class="dropdown-item">Update</a>
+                                    <button onclick="deleteNews(@item.Id);" class="dropdown-item">Delete</button>
+                                    <a href="#" class="dropdown-item">Stats</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@if (Model.Count <= 0)
+{
+    <div class="text-center text-muted">
+        <p class="mb-0">There is no written any news articles yet</p>
+        <p>
+            You can start writing your first article
+            <a asp-area="Author" asp-controller="News" asp-action="WriteNews">here</a>
+        </p>
+    </div>
+}
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(() => {
+            if ("@TempData["SuccessMessage"]" != "") {
+                toastr.success("@TempData["SuccessMessage"]");
+            }
+        });
+    </script>
+    <script>
+        function deleteNews(id) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "post",
+                        url: "/Author/News/DeleteNews",
+                        data: { id: id },
+                        success: (response) => {
+                            if (response.success) {
+                                swalWithBootstrapButtons.fire(
+                                    'Deleted!',
+                                    'Your article has been deleted.',
+                                    'success'
+                                );
+                                $("#news-row-" + id).remove();
+                            } else {
+                                swalWithBootstrapButtons.fire(
+                                    'Error!',
+                                    'Your article didn\'t deleted.\n' + response.message,
+                                    'error'
+                                )
+                            }
+                        }
+                    });
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your article is safe :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
+    <script>
+        function publishNews(id, title) {
+            $.ajax({
+                type: "post",
+                url: "/Author/News/PublishNews",
+                data: { id: id },
+                success: (response) => {
+                    if (response.success) {
+                        toastr.success(response.message, title + " Published Successfully");
+                        $("#unpublish-btn-" + id).removeClass("d-none");
+                        $("#publish-btn-" + id).addClass("d-none");
+                    } else {
+                        toastr.error(response.message, "News Cannot Published");
+                    }
+                }
+            })
+        }
+        function unpublishNews(id, title) {
+            $.ajax({
+                type: "post",
+                url: "/Author/News/UnpublishNews",
+                data: { id: id },
+                success: (response) => {
+                    if (response.success) {
+                        toastr.info(response.message, title + " Unpublished Successfully");
+                        $("#unpublish-btn-" + id).addClass("d-none");
+                        $("#publish-btn-" + id).removeClass("d-none");
+                    } else {
+                        toastr.error(response.message, "News Cannot Unpublished");
+                    }
+                }
+            })
+        }
+    </script>
+}

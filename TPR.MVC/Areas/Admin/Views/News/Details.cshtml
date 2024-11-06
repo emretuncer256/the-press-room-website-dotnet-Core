@@ -1,0 +1,147 @@
+﻿@using TPR.Business.Abstract
+
+@model Article
+
+@inject ICategoryService CS
+@inject IArticleService AS
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+}
+<h1>Details</h1>
+
+<div class="card">
+    <div class="card-header justify-content-center">
+        <div class="float-left">
+            <div class="row">
+                <span class="text-muted px-2">Category:</span>
+                <span class="badge badge-primary">@CS.GetById(Model.CategoryId).Data.Name</span>
+            </div>
+            <div class="row mt-2">
+                <span class="text-muted px-2">Tags:</span>
+                @foreach (var tag in @AS.GetTags(Model).Data)
+                {
+                    <span class="badge badge-pill badge-dark">#@tag.Name</span>
+                }
+            </div>
+            <div class="row mt-2">
+                <span class="text-muted px-2">Likes:</span>
+                <span class="badge badge-pill badge-success">
+                    <span class="mdi mdi-heart"></span>
+                    @Model.Likes
+                </span>
+                <span class="text-muted px-2">Hits:</span>
+                <span class="badge badge-pill badge-success">
+                    <span class="mdi mdi-eye"></span>
+                    @Model.Hits
+                </span>
+            </div>
+        </div>
+        <div class="float-right">
+            <div class="btn btn-group" role="group">
+                <button id="unpublish-btn-@Model.Id" onclick="unpublishNews(@Model.Id);" class="btn btn-light btn-icon-text@(!Model.IsPublished?" d-none":"")">
+                    <i class="mdi mdi-download btn-icon-prepend"></i>
+                    Unpublish
+                </button>
+                <button id="publish-btn-@Model.Id" onclick="publishNews(@Model.Id);" class="btn btn-success btn-icon-text@(Model.IsPublished?" d-none":"")">
+                    <i class="mdi mdi-publish btn-icon-prepend"></i>
+                    Publish
+                </button>
+
+                <a asp-area="Author" asp-controller="News" asp-action="EditNews" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <i class="mdi mdi-tooltip-edit btn-icon-prepend"></i>
+                    Update
+                </a>
+                <a href="#" class="btn btn-danger">
+                    <i class="mdi mdi-trash-can btn-icon-prepend"></i>
+                    Delete
+                </a>
+            </div>
+            <div class="d-flex flex-row justify-content-between">
+                <div class="d-flex flex-column">
+                    <label for="toggle-one">Featured News</label>
+                    <input id="toggle-featured" type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" @(Model.IsFeatured ? "checked" : "")>
+                </div>
+                <div class="d-flex flex-column">
+                    <label for="toggle-one">Breaking News</label>
+                    <input id="toggle-breaking" type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" @(Model.IsBreakingNews ? "checked" : "")>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <h1 class="text-center mb-3">@Model.Title</h1>
+        <div class="text-center mb-5">
+            <img class="img-thumbnail border-primary" src="~/uploads/Authors/Thumbnails/@Model.Thumbnail" />
+        </div>
+        @Html.Raw(Model.Content)
+    </div>
+</div>
+@section Scripts{
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#toggle-featured').bootstrapToggle();
+            $('#toggle-breaking').bootstrapToggle();
+        })
+    </script>
+    <script>
+        $(function () {
+            $('#toggle-featured').change(function () {
+                if ($(this).prop('checked')) {
+                    $.ajax({
+                        'type': 'post',
+                        'url': '/Admin/News/ToggleFeaturedNews',
+                        'data': { id: @Model.Id },
+                        'success': (response) => {
+                            if (response.success) {
+                                toastr.success(response.message);
+                            }
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        'type': 'post',
+                        'url': '/Admin/News/ToggleFeaturedNews',
+                        'data': { id: @Model.Id },
+                        'success': (response) => {
+                            if (response.success) {
+                                toastr.info(response.message)
+                            }
+                        }
+                    });
+                }
+            });
+            $('#toggle-breaking').change(function () {
+                if ($(this).prop('checked')) {
+                    $.ajax({
+                        'type': 'post',
+                        'url': '/Admin/News/ToggleBreakingNews',
+                        'data': { id: @Model.Id },
+                        'success': (response) => {
+                            if (response.success) {
+                                toastr.success(response.message);
+                            }
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        'type': 'post',
+                        'url': '/Admin/News/ToggleBreakingNews',
+                        'data': { id: @Model.Id },
+                        'success': (response) => {
+                            if (response.success) {
+                                toastr.info(response.message);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

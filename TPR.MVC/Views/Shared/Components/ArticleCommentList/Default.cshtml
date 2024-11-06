@@ -1,0 +1,38 @@
+﻿@using System.Security.Claims;
+@using TPR.Business.Abstract
+@using TPR.MVC.Helpers
+@inject IUserService US
+@model List<Comment>
+
+
+@if (Model.Count <= 0)
+{
+    <div class="alert alert-primary">There are no comments yet. Make the first comment.</div>
+}
+else
+{
+    <div class="mb-3">
+        <div class="section-title mb-0">
+            <h4 class="m-0 text-uppercase font-weight-bold">@Model.Count Comments</h4>
+        </div>
+        <div class="bg-white border border-top-0 p-4">
+            @foreach (var item in Model)
+            {
+                <div class="media mb-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" alt="Image" class="img-fluid rounded-circle mr-3 mt-1" style="width: 45px;">
+                    <div class="media-body">
+                        <h6><a class="text-secondary font-weight-bold" href="">@US.GetById(item.UserId).Name @((int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == item.UserId) ? "(You)" : "")</a> <small><i>@TimeAgoHelper.TimeAgo(item.CreatedAt)</i></small></h6>
+                        <p>
+                            @item.Text
+                        </p>
+                        @*<button class="btn btn-sm btn-outline-secondary">Reply</button>*@
+                        @if (int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == item.UserId)
+                        {
+                            <a style="border-radius: 5px;" href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,9 @@
+﻿@model List<Category>
+
+<h5 class="mb-4 text-white text-uppercase font-weight-bold">Categories</h5>
+<div class="m-n1">
+    @foreach (var item in Model)
+    {
+        <a href="" class="btn btn-sm btn-secondary m-1">@item.Name</a>
+    }
+</div>

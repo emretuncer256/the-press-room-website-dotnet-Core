@@ -1,0 +1,99 @@
+﻿@using System.Security.Claims;
+@using TPR.Business.Abstract
+
+@model List<Article>
+
+@inject IUserService US
+@inject ICategoryService CS
+@inject IArticleService AS
+@{
+    ViewData["Title"] = "News";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>All News</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table style="border-radius: 5px;" class="table table-dark">
+                <thead>
+                    <tr>
+                        <th>Thumbnail</th>
+                        <th>Author</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Tags</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Tools</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img style="width:100%;height:100%;border-radius: 5%;" src="~/uploads/Authors/Thumbnails/@item.Thumbnail" alt="" />
+                            </td>
+                            <td>
+                                <img src="~/admin-theme/assets/images/faces-clipart/pic-1.png" alt="image">
+                                @US.GetById(item.UserId).Name
+                                @(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == item.UserId ? " (You)" : "")
+                            </td>
+                            <td>
+                                <a data-toggle="tooltip" data-placement="bottom" title="@item.Title" asp-area="Admin" asp-controller="News" asp-action="Details" asp-route-id="@item.Id" class="btn btn-link">@(item.Title.Length > 25 ? item.Title.Substring(0, 25) + "..." : item.Title)</a>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">@CS.GetById(item.CategoryId).Data.Name</span>
+                            </td>
+                            <td class="d-flex flex-column justify-content-center">
+                                @foreach (var tag in AS.GetTags(item).Data)
+                                {
+                                    <span class="badge badge-pill badge-dark my-1">#@tag.Name</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.IsPublished && item.IsApproved)
+                                {
+                                    <label class="badge badge-outline-success">Published</label>
+                                }
+                                else if (item.IsPublished && !item.IsApproved)
+                                {
+                                    <label class="badge badge-outline-warning">Pending</label>
+                                }
+                                else
+                                {
+                                    <label class="badge badge-outline-danger">Not Published</label>
+                                }
+                            </td>
+                            <td>
+                                @item.CreatedAt.ToString("d MMM yyyy") <span class="badge badge-pill badge-success"> @item.CreatedAt.ToString("H:mm")</span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-wrench btn-icon-prepend"></i> Tools</button>
+                                    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 43px, 0px);">
+                                        <button id="unpublish-btn-@item.Id" onclick="unpublishNews(@item.Id);" class="dropdown-item @(!item.IsPublished?"d-none":"")">Unpublish</button>
+                                        <button id="publish-btn-@item.Id" onclick="publishNews(@item.Id);" class="dropdown-item @(item.IsPublished?"d-none":"")">Publish</button>
+                                        <a asp-area="Author" asp-controller="News" asp-action="EditNews" asp-route-id="@item.Id" class="dropdown-item">Update</a>
+                                        <a href="#" class="dropdown-item">Delete</a>
+                                        <a href="#" class="dropdown-item">Stats</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+}

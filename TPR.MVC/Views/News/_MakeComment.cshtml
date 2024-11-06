@@ -1,0 +1,19 @@
+﻿<div class="mb-3">
+    <div class="section-title mb-0">
+        <h4 class="m-0 text-uppercase font-weight-bold">Leave a comment</h4>
+    </div>
+    <div class="bg-white border border-top-0 p-4">
+        @using (Html.BeginForm("MakeComment", "News", FormMethod.Post))
+        {
+            <input name="ArticleId" type="hidden" value="@Model.Id">
+            <div class="form-group">
+                <label for="Text">Message *</label>
+                <textarea id="Text" name="Text" cols="30" rows="5" class="form-control" style="border-radius: 7px;"></textarea>
+            </div>
+            <div class="form-group mb-0">
+                <input type="submit" value="Leave a comment"
+                       class="btn btn-primary font-weight-semi-bold py-2 px-3">
+            </div>
+        }
+    </div>
+</div>

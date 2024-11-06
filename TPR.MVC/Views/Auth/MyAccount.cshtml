@@ -1,0 +1,166 @@
+﻿@using System.Security.Claims;
+@using TPR.Business.Abstract;
+@using TPR.Core.Entities.Concrete
+
+@inject IUserService US
+@{
+    ViewData["Title"] = "My Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int _id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+    var user = US.GetById(_id);
+}
+
+<div class="container-fluid mt-5 pt-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <div class="section-title mb-0">
+                    <h4 class="m-0 text-uppercase font-weight-bold">Account Informations</h4>
+                </div>
+                <div class="bg-white border border-top-0 p-4 mb-3">
+                    <div class="mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Name</h6>
+                        <p class="mb-4">@user.Name</p>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-envelope-open text-primary mr-2"></i>
+                                <h6 class="font-weight-bold mb-0">Email</h6>
+                            </div>
+                            <p class="m-0">@user.Email</p>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-envelope-open text-primary mr-2"></i>
+                                <h6 class="font-weight-bold mb-0">Birthdate</h6>
+                            </div>
+                            <p class="m-0">@user.Birthdate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <!-- Social Follow Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Follow Us</h4>
+                    </div>
+                    <div class="bg-white border border-top-0 p-3">
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #39569E;">
+                            <i class="fab fa-facebook-f text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Fans</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #52AAF4;">
+                            <i class="fab fa-twitter text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #0185AE;">
+                            <i class="fab fa-linkedin-in text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Connects</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #C8359D;">
+                            <i class="fab fa-instagram text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #DC472E;">
+                            <i class="fab fa-youtube text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Subscribers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none" style="background: #055570;">
+                            <i class="fab fa-vimeo-v text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Social Follow End -->
+                <!-- Newsletter Start -->
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.5/sweetalert2.min.css" integrity="sha512-InYSgxgTnnt8BG3Yy0GcpSnorz5gxHvT6OEoRWj91Gg+RvNdCiAharnBe+XFIDS754Kd9TekdjXw3V7TAgh6Vw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Newsletter</h4>
+                    </div>
+                    <div class="bg-white text-center border border-top-0 p-3">
+                        <p>Subscribe to our newsletter and stay up-to-date on the latest news and information</p>
+                        <div class="input-group mb-2" style="width: 100%;">
+                            <input id="newsletter-mail" type="email" class="form-control form-control-lg" placeholder="Your Email">
+                            <div class="input-group-append">
+                                <button onclick="subscribeNewsletter();" class="btn btn-primary font-weight-bold px-3">Sign Up</button>
+                            </div>
+                        </div>
+                        <small>
+                            Sign up today and never miss a beat!
+                        </small>
+                    </div>
+                </div>
+
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.5/sweetalert2.min.js" integrity="sha512-jt82OWotwBkVkh5JKtP573lNuKiPWjycJcDBtQJ3BkMTzu1dyu4ckGGFmDPxw/wgbKnX9kWeOn+06T41BeWitQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <script>
+                    function subscribeNewsletter() {
+                        var email = $("#newsletter-mail").val();
+                        var isEmailValid = email.match(/^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
+
+                        if (isEmailValid) {
+                            $.ajax({
+                                url: "/Home/SubscribeNewsletter",
+                                type: "post",
+                                data: { Email: $("#newsletter-mail").val() },
+                                success: function (response) {
+                                    if (response.success) {
+                                        Swal.fire(
+                                            'Success!',
+                                            'Subscription successful!',
+                                            'success'
+                                        )
+                                    } else {
+                                        Swal.fire(
+                                            'Error!',
+                                            response.message,
+                                            'error'
+                                        )
+                                    }
+                                },
+                                error: function () {
+                                    Swal.fire(
+                                        'Error!',
+                                        'Something wrong. Please try again later!',
+                                        'error'
+                                    )
+                                }
+                            });
+                        } else {
+                            Swal.fire(
+                                'Invalid Email!',
+                                "Please enter your own email.",
+                                'error'
+                            )
+                        }
+                        $("#newsletter-mail").val("")
+                    }
+                </script>
+                <!-- Newsletter End -->
+                <!-- Tags Start -->
+
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Tags</h4>
+                    </div>
+                    <div class="bg-white border border-top-0 p-3">
+                        <div class="d-flex flex-wrap m-n1">
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Entertainment</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Politics</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Technology</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Opinion</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">World News</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Fashion</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Science</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Weather</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Environment</a>
+                            <a href="" class="btn btn-sm btn-outline-secondary m-1">Food</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tags End -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TPR.Business\TPR.Business.csproj" />
+    <ProjectReference Include="..\TPR.Core\TPR.Core.csproj" />
+    <ProjectReference Include="..\TPR.DataAccess\TPR.DataAccess.csproj" />
+    <ProjectReference Include="..\TPR.Entities\TPR.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Author\Data\" />
+    <Folder Include="Areas\User\Controllers\" />
+    <Folder Include="Areas\User\Data\" />
+    <Folder Include="Areas\User\Models\" />
+    <Folder Include="Areas\User\Views\" />
+    <Folder Include="wwwroot\uploads\Authors\Thumbnails\" />
+  </ItemGroup>
+
+</Project>

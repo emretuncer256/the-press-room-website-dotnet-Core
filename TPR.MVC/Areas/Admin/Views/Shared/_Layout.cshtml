@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Administration | ThePressRoom</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="~/admin-theme/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/admin-theme/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="~/admin-theme/assets/vendors/jvectormap/jquery-jvectormap.css">
+    <link rel="stylesheet" href="~/admin-theme/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="~/admin-theme/assets/vendors/owl-carousel-2/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/admin-theme/assets/vendors/owl-carousel-2/owl.theme.default.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="~/admin-theme/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="~/admin-theme/assets/images/favicon.png" />
+    @await RenderSectionAsync("Styles", false)
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- partial:Sidebar -->
+        <partial name="~/Areas/Admin/Views/Shared/Partials/_Sidebar.cshtml" />
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:Navbar -->
+            <partial name="~/Areas/Admin/Views/Shared/Partials/_Navbar.cshtml" />
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    @RenderBody()
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <partial name="~/Areas/Admin/Views/Shared/Partials/_Footer.cshtml" />
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="~/admin-theme/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="~/admin-theme/assets/vendors/chart.js/Chart.min.js"></script>
+    <script src="~/admin-theme/assets/vendors/progressbar.js/progressbar.min.js"></script>
+    <script src="~/admin-theme/assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+    <script src="~/admin-theme/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="~/admin-theme/assets/vendors/owl-carousel-2/owl.carousel.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="~/admin-theme/assets/js/off-canvas.js"></script>
+    <script src="~/admin-theme/assets/js/hoverable-collapse.js"></script>
+    <script src="~/admin-theme/assets/js/misc.js"></script>
+    <script src="~/admin-theme/assets/js/settings.js"></script>
+    <script src="~/admin-theme/assets/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="~/admin-theme/assets/js/dashboard.js"></script>
+    <!-- End custom js for this page -->
+    <link href="~/css/toastr.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(function () {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", false)
+</body>
+</html>

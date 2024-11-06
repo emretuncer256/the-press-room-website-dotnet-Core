@@ -1,0 +1,51 @@
+﻿@using TPR.Core.Entities.Concrete
+@model List<User>
+
+@{
+    ViewData["Title"] = "Admins";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>All Admins</h1>
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Admins</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th> # </th>
+                                <th> User </th>
+                                <th> Name </th>
+                                <th> Email </th>
+                                <th> Role </th>
+                                <th> Created At </th>
+                                <th> Active </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <th>@item.Id</th>
+                                    <td class="py-1">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" alt="image">
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Email</td>
+                                    <td><span class="badge badge-danger">Admin</span></td>
+                                    <td>@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                    <td><span class="badge badge-pill badge-success">Yes</span></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

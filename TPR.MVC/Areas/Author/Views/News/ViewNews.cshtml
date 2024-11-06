@@ -1,0 +1,147 @@
+﻿@using TPR.Business.Abstract
+
+@model Article
+
+@inject ICategoryService CS
+@inject IArticleService AS
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Areas/Author/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@mdi/font@7.2.96/css/materialdesignicons.min.css">
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <div class="row">
+                <span class="text-muted px-2">Category:</span>
+                <span class="badge badge-gradient-primary">@CS.GetById(Model.CategoryId).Data.Name</span>
+            </div>
+            <div class="row mt-2">
+                <span class="text-muted px-2">Tags:</span>
+                @foreach (var tag in @AS.GetTags(Model).Data)
+                {
+                    <span class="badge badge-pill badge-gradient-dark">#@tag.Name</span>
+                }
+            </div>
+            <div class="row mt-2">
+                <span class="text-muted px-2">Likes:</span>
+                <span class="badge badge-pill badge-gradient-success">
+                    <span class="mdi mdi-heart"></span>
+                    @Model.Likes
+                </span>
+                <span class="text-muted px-2">Hits:</span>
+                <span class="badge badge-pill badge-gradient-success">
+                    <span class="mdi mdi-eye"></span>
+                    @Model.Hits
+                </span>
+            </div>
+        </div>
+        <div class="float-right">
+            <div class="btn btn-group" role="group">
+                <button id="unpublish-btn-@Model.Id" onclick="unpublishNews(@Model.Id);" class="btn btn-gradient-light btn-icon-text@(!Model.IsPublished?" d-none":"")">
+                    <i class="mdi mdi-download btn-icon-prepend"></i>
+                    Unpublish
+                </button>
+                <button id="publish-btn-@Model.Id" onclick="publishNews(@Model.Id);" class="btn btn-gradient-success btn-icon-text@(Model.IsPublished?" d-none":"")">
+                    <i class="mdi mdi-publish btn-icon-prepend"></i>
+                    Publish
+                </button>
+
+                <a asp-area="Author" asp-controller="News" asp-action="EditNews" asp-route-id="@Model.Id" class="btn btn-gradient-warning">
+                    <i class="mdi mdi-file-edit btn-icon-prepend"></i>
+                    Update
+                </a>
+                <a href="#" class="btn btn-gradient-danger">
+                    <i class="mdi mdi-trash-can btn-icon-prepend"></i>
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <h1 class="text-center mb-3">@Model.Title</h1>
+        <div class="text-center">
+            <img class="img-thumbnail border-primary" src="~/uploads/Authors/Thumbnails/@Model.Thumbnail" />
+        </div>
+
+        @Html.Raw(Model.Content)
+    </div>
+    <div class="card-footer">
+        <p class="text-small float-left">
+            <b>Created At: </b>
+            <span class="badge badge-gradient-dark badge-pill">@Model.CreatedAt.ToString("f")</span>
+        </p>
+        @if (Model.UpdatedAt != null)
+        {
+            <p class="text-small float-right">
+                <b>Last Update: </b>
+                <span class="badge badge-gradient-info badge-pill">@Model.UpdatedAt?.ToString("f")</span>
+            </p>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/@@mdi/font@7.2.96/scripts/verify.min.js"></script>
+    <link href="~/css/toastr.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(function () {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+        });
+    </script>
+    <script>
+        function publishNews(id) {
+            $.ajax({
+                type: "post",
+                url: "/Author/News/PublishNews",
+                data: { id: id },
+                success: (response) => {
+                    if (response.success) {
+                        toastr.success(response.message, "News Published Successfully");
+                        $("#unpublish-btn-" + id).removeClass("d-none");
+                        $("#publish-btn-" + id).addClass("d-none");
+                    } else {
+                        toastr.error(response.message, "News Cannot Published");
+                    }
+                }
+            })
+        }
+        function unpublishNews(id) {
+            $.ajax({
+                type: "post",
+                url: "/Author/News/UnpublishNews",
+                data: { id: id },
+                success: (response) => {
+                    if (response.success) {
+                        toastr.success(response.message, "News Unpublished Successfully");
+                        $("#unpublish-btn-" + id).addClass("d-none");
+                        $("#publish-btn-" + id).removeClass("d-none");
+                    } else {
+                        toastr.error(response.message, "News Cannot Unpublished");
+                    }
+                }
+            })
+        }
+    </script>
+}

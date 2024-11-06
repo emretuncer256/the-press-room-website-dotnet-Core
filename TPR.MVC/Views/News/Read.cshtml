@@ -1,0 +1,126 @@
+﻿@using TPR.Business.Abstract
+
+@model Article
+
+@inject ICategoryService CS
+@inject IUserService US
+@inject IArticleService AS
+@{
+    ViewData["Title"] = "Read";
+    Layout = "~/Views/Shared/_ReadLayout.cshtml";
+}
+
+<!-- News With Sidebar Start -->
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- News Detail Start -->
+                <div class="position-relative mb-3 mt-3">
+                    <img class="img-fluid w-100" src="~/uploads/Authors/Thumbnails/@Model.Thumbnail" style="object-fit: cover;border-radius:7px 7px 0 0;">
+                    <div class="bg-white border border-top-0 p-4">
+                        <div class="mb-3">
+                            <a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2"
+                               href="#">@CS.GetById(Model.CategoryId).Data.Name</a>
+                            <a class="text-body" href="">@Model.CreatedAt.ToString("MMM dd, yyyy")</a>
+                        </div>
+                        @Html.Raw(Model.Content)
+                        <div class="d-flex">
+                            @foreach (var tag in AS.GetTags(Model).Data)
+                            {
+                                <span style="border-radius: 10px;" class="badge badge-pill badge-info py-2 mr-3">#@tag.Name</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle mr-2" src="data:image/jpeg;base64,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" width="25" height="25" alt="">
+                            <span>@US.GetById(Model.UserId).Name</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="ml-3"><i class="far fa-eye mr-2"></i>@Model.Hits</span>
+                            <span class="ml-3"><i class="far fa-heart mr-2"></i>@Model.Likes</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- News Detail End -->
+                <!-- Comment Form Start -->
+                <partial name="_MakeComment" />
+                <!-- Comment Form End -->
+                <!-- Comment List Start -->
+                @await Component.InvokeAsync("ArticleCommentList", new {id=Model.Id})
+                <!-- Comment List End -->
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Social Follow Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Follow Us</h4>
+                    </div>
+                    <div class="bg-white border border-top-0 p-3">
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #39569E;">
+                            <i class="fab fa-facebook-f text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Fans</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #52AAF4;">
+                            <i class="fab fa-twitter text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #0185AE;">
+                            <i class="fab fa-linkedin-in text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Connects</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #C8359D;">
+                            <i class="fab fa-instagram text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #DC472E;">
+                            <i class="fab fa-youtube text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Subscribers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none" style="background: #055570;">
+                            <i class="fab fa-vimeo-v text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Social Follow End -->
+                <!-- Ads Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Advertisement</h4>
+                    </div>
+                    <div class="bg-white text-center border border-top-0 p-3">
+                        <a href=""><img class="img-fluid" src="/theme/img/news-800x500-2.jpg" alt=""></a>
+                    </div>
+                </div>
+                <!-- Ads End -->
+                <!-- Popular News Start -->
+                @await Component.InvokeAsync("PopularNewsList")
+                <!-- Popular News End -->
+                <!-- Newsletter Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Newsletter</h4>
+                    </div>
+                    <div class="bg-white text-center border border-top-0 p-3">
+                        <p>Aliqu justo et labore at eirmod justo sea erat diam dolor diam vero kasd</p>
+                        <div class="input-group mb-2" style="width: 100%;">
+                            <input type="text" class="form-control form-control-lg" placeholder="Your Email">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary font-weight-bold px-3">Sign Up</button>
+                            </div>
+                        </div>
+                        <small>Lorem ipsum dolor sit amet elit</small>
+                    </div>
+                </div>
+                <!-- Newsletter End -->
+                <!-- Tags Start -->
+                @await Component.InvokeAsync("TagList")
+                <!-- Tags End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- News With Sidebar End -->
